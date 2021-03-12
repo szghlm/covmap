@@ -5,4 +5,4 @@ Az aktív esetszámok a nyilvánosságra hozott adattáblában nem szerepelnek, 
 
 Az adatok forrása: https://docs.google.com/spreadsheets/d/1ConGRVdv8jocW8G1lhpLqbDVnYwibjP1xhQJ5qiP_Ew/edit#gid=1499258253 
 
-Megjegyzés: A térkép a folium (https://python-visualization.github.io/folium/) csomag kipróbálása készült. Nem célja tájékoztatást adni a vírushelyzetről.    
+Megjegyzés: A térkép a folium (https://python-visualization.github.io/folium/) csomag használatára ad példát. Nem célja tájékoztatást adni a vírushelyzetről.    
