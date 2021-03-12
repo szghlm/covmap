@@ -5,4 +5,4 @@ Figyelem! Az aktív esetszámok a nyilvánosságra hozott adattáblában nem sze
 
 Az adatok forrása: https://docs.google.com/spreadsheets/d/1ConGRVdv8jocW8G1lhpLqbDVnYwibjP1xhQJ5qiP_Ew/edit#gid=1499258253 
 
-Előnézet: https://htmlpreview.github.io/?https://raw.githubusercontent.com/szghlm/gis/main/index.html
+Előnézet: https://htmlpreview.github.io/?https://github.com/szghlm/gis/blob/main/index.html
