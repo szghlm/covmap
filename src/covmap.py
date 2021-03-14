@@ -6,7 +6,7 @@ import os, sys
 
 #https://docs.google.com/spreadsheets/d/1ConGRVdv8jocW8G1lhpLqbDVnYwibjP1xhQJ5qiP_Ew/edit#gid=1499258253
 
-source_original = "../data/COVID19_településenként_2021.02.14.csv"
+source_original = "../data/covid19.csv"
 source_with_city = "../data/data.csv"
 
 class DataPoint:
