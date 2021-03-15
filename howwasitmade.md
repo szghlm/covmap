@@ -47,11 +47,11 @@ def __getLocation(city):
     return city.latitude, city.longitude
 ```
 
-Az érdemi részt, a településnév geokódolását az OSM-hez fejlesztett [Nominatim](https://geopy.readthedocs.io/en/stable/index.html?highlight=Nominatim#geopy.geocoders.Nominatim)
+Az érdemi munkát, a településnév geokódolását az OSM-hez fejlesztett [Nominatim](https://geopy.readthedocs.io/en/stable/index.html?highlight=Nominatim#geopy.geocoders.Nominatim)
 végzi el, mely képes az OSM referenciatáblázatából kikeresi a településhez tartozó földrajzi koordinátákat. A Nominatim egy kompromisszumos megoldás. Ingyenesen 
 használhatjuk, cserébe viszont nem terhelhetjük túl a szolgáltatást, másodperncenként egy kérésünket fogja kiszolgálni. 
 
-Majd írunk egy függvényt a covid19.csv (vagy azzal egyező felépítésű) fájlban szereplő adatokat memóriába történő felolvasására is. A függvény az érdemi sorokban 
+Majd írunk egy függvényt a covid19.csv (vagy azzal egyező felépítésű) fájlban szereplő adatok memóriába történő felolvasására is. A függvény az értékes sorokban 
 szereplő adatokat -- megfelelő formára hozva -- bepakolja egy listába. 
 A visszaadott listában (településnév, esetszám, népesség) felépítésű rendezett hármasok szerepelnek majd. 
 
@@ -144,8 +144,8 @@ class DataPoint:
                f"eset/népesség: {self.get_ncases_per_population()*100:0.2f}%<br>"
 ```
 
-Mivel az előző részeket úgy írtuk meg, hogy az megjelenítéshez szükséges adatok egy fájlba kerüljenek, ezért készítünk egy függvényt, 
-mely felolvassa a koordináttákkal kiegészített adatokat és egy listába pakolja az összes megjelenítendő adatpontot. 
+Mivel az előző részeket úgy írtuk meg, hogy a megjelenítéshez szükséges adatok egy fájlba kerüljenek, ezért készítünk egy függvényt, 
+mely képes felolvasni és DataPoint objektumokként egy listába pakolni a koordináttákkal kiegészített covid adatokat.  
 
 ```
 def readData(filename):
@@ -162,8 +162,8 @@ def readData(filename):
 (Aki ismeri pl. a Panda csomagot, bátran válasszon más megoldást a fentiek helyett.) 
 
 
-Most már jöhet az érdemi rész, a térkép előállítása. A webes térképek esetében az interaktivitás lehetőségét (zoomolás, navigálás, pontok kijelölése, stb.)
-általában JavaScript biztosítja. Mi az open-source, [Leaflet JavaScript könyvtárt] fogjuk felhasználni. De semmi pánik, egy sor JavaScriptet
+Most már tényleg jöhet a térkép előállítása. A webes térképek esetében az interaktivitás lehetőségét (zoomolás, navigálás, pontok kijelölése, stb.)
+általában JavaScript biztosítja. Mi egy open-source függvénykönyvtárat, a [Leafletet] fogjuk felhasználni. De semmi pánik, egy sor JavaScriptet
 sem kell írnunk, a [Folium](https://python-visualization.github.io/folium/) Python modul legenerálja majd a szükséges részeket helyettünk.
 
 A térkép létrehozását az alábbi függvény végzi el:
@@ -200,27 +200,27 @@ Rögtön a függvény elején példányosítunk egy Map objektumot,
 meghatározva az alaptérképet, melyhez az adatokat kapcsolhatjuk. 
 A _location_-nak átadott szélességi és hosszúsági koordináták és a nagyítás mértéke úgy van beállítva, hogy a térképen Magyarország legyen látható. 
 
-A _tiles_ paraméter értéke határozza meg a csempekészletet. Nem, ez a szó itt nem a fürdőszobai csempére, hanem egy kis négyzet alakú, a térkép megfelelő részét tartalmazó
-képre utal. Ezekből a csempékből áll majd elő a felhasználó által aktuálisan látható térképrész. A _tiles_ paraméter beállításánál figyeljün arra, hogy
+A _tiles_ paraméter értéke határozza meg a csempekészletet. Nem, ez a szó itt nem a fürdőszobai csempére utal, hanem egy kis négyzet alakú, a térkép megfelelő részét tartalmazó
+képre. Ezekből a csempékből áll majd elő a felhasználó által aktuálisan látható térképrész. A _tiles_ paraméter beállításánál figyeljün arra, hogy
 az igényeinknek megfelelő [csempeszolgáltatást](https://python-visualization.github.io/folium/modules.html) vegyünk igénybe. 
 A 'cartodbpositron' világos megjelenésű térképet eredményez majd, melyen jól látszanak majd a különféle színnel rajzolt körök. 
 
 
 
-A következő sorok biztosítják majd, hogy a vírusfertőzés mértékét jelölő körök mérete és színe megfelelő értékek között mozogjon. 
+A függvény következő sorai biztosítják majd, hogy a vírusfertőzés mértékét jelölő körök mérete és színe megfelelő értékek között mozogjon. 
 A _maxCases_ változóba a fertőzés által leginkább érintett településhez tartozó esetszám/lakosság érték kerül. 
 A _scale_factor_circle_ értékét pedig arra fogjuk használni, hogy az esetszám/lakosság értékeket a [0; 5000] tartományba skálázzuk át, 
 így egyetlen egy kör sem fog túl sokat kitakarni a térképből.
 
 A _colormap_ egy színpalettát tartalmaz. A minimum és maximum értéket úgy állítsuk be, hogy igazodjon a szinezéshez felhasznált jellemző tartományához.
-A létrehozott térképen a körök mérete és színe is az esetszám/lakosság hányadostól függ. 
+Esetünkben a térképen megjelenített körök mérete és színe is az esetszám/lakosság hányadostól függ majd. 
 A színskála már használható, de a felhasználók számára is érdemes láthatóvá tenni, hogy könnyebben tudják értelmezni a színek jelentését. 
 Erre szolgál a _map.add_child(colormap)_ függvényhívás.
 
 Végül az _adat_ listát bejárva létrehozzuk a települések érintettségét jelző köröket. Az átlátszatlanság (opacity) állításával elérjük, hogy a kör alatti részek is láthatóak maradjanak valamennyire, 
 ez segíti, hogy a térképen lévő településnevek a sok jelölő ellenére is olvashatóak maradjanak.
 A _tooltip_ paraméternek átadjuk az adatponthoz tartozó leírást, így ha a felhasználó egy kör fölé mozgatja az egeret, megjelenik majd
-egy kis szöveges "buborék" ami a település nevét és a településhez tartozó fertőzöttségi adatokat tartalmazza. 
+egy kis szöveges "buborék", ami a település nevét és a településhez tartozó fertőzöttségi adatokat tartalmazza. 
 
 
 A következő függvény címmel látja el a térképet, és elmenti a térképet a kívánt néven. Az eredmény egy böngészőben megjeleníthető HTML fájl lesz. 
@@ -234,9 +234,9 @@ def createHtml(map, dest_filename = 'map.html'):
     map.save(dest_filename)
 
 
-A nehezével már végeztünk, már csak fel kell használni a megírt részeket. Ha a koordinátákkal kiegészített állomány még nem létezik,
+A nehezével már végeztünk, már csak fel kell használni a megírt függvényeket. Ha a koordinátákkal kiegészített állomány még nem létezik,
 akkor az _extendWithCoord_ függvényt meghívva létrehozzuk azt. Majd meghívjuk az adatok beolvassáára szolgáló függvényt és 
-a térképkészítőt, majd létrehozzuk a térképet tartalmazó weblapot, és elmentjük azt a kívnánt néven.  
+a térképkészítőt, létrehozzuk a térképet tartalmazó weblapot, és elmentjük azt a kívnánt néven.  
  
 source_original = "../data/covid19.csv"
 source_with_city = "../data/data.csv"
