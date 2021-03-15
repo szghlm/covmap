@@ -1,8 +1,10 @@
-import branca.colormap as cm
-import folium as fl
+import os
 import csv
+
+import folium as fl
+import branca.colormap as cm
+
 import city2location as cl
-import os, sys
 
 #https://docs.google.com/spreadsheets/d/1ConGRVdv8jocW8G1lhpLqbDVnYwibjP1xhQJ5qiP_Ew/edit#gid=1499258253
 
@@ -66,16 +68,14 @@ def createMap(data):
     return map
 
 
-def createHtml(map):
+def createHtml(map, dest_filename = 'map.html'):
     title_html = """<h3>COVID19 összesített esetszám településenként (2020.03.04-2021.02.14.-ig) </h3>
                     Az adatok forrása: https://docs.google.com/spreadsheets/d/1ConGRVdv8jocW8G1lhpLqbDVnYwibjP1xhQJ5qiP_Ew/edit#gid=1499258253 
                 <br>"""
 
     map.get_root().html.add_child(fl.Element(title_html))
-    map.save('osm.html')
+    map.save(dest_filename)
 
- #   test = fl.Html('', script=True)
- #   popup = fl.Popup(test, max_width=2500)
 
 
 if __name__ == '__main__':
@@ -84,9 +84,5 @@ if __name__ == '__main__':
 
     data = readData(source_with_city)
     map = createMap(data)
-    createHtml(map)
+    createHtml(map, 'index.html')
 
-
-
-
-#fl.Marker(location="", popup="", tooltip="")

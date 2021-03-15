@@ -1,13 +1,19 @@
 import csv
 import geopy
 
+import logging
+logging.basicConfig(filename='info.log', encoding='utf-8', level=logging.DEBUG)
+
 # for test
-__source = "COVID19_településenként_2021.02.14.csv"
+__source = "data/covid19.csv"
+__dest = "data/data.csv"
+
 
 def __getLocation(city):
     locator = geopy.geocoders.Nominatim(user_agent="city2location")
     city = locator.geocode(city)
     return city.latitude, city.longitude
+
 
 def __readCovidData(filename):
     lst = []
@@ -21,15 +27,17 @@ def __readCovidData(filename):
 
     return lst
 
+
 def __addLocation(datalst):
     lst = []
     for city, cases, pop in datalst:
         try:
-           print(city)
-           lat, lon = __getLocation(city)
-           lst.append((city, cases, pop, lat, lon))
+            logging.info(city)
+            lat, lon = __getLocation(city + " Hungary")
+            lst.append((city, cases, pop, lat, lon))
         except:
-           print("problémás város:", city)
+            logging.warning(f'problémás település: {city}')
+
     return lst
 
 def __writeLocations(filename, datalist):
@@ -44,6 +52,5 @@ def extendWithCoord(source_filename, dest_filename):
     __writeLocations(dest_filename, datalist2)
 
 if __name__ ==  "__main__":
-    extendWithCoord()
+    extendWithCoord(__source, __dest)
 
-#fl.Marker(location="", popup="", tooltip="")
