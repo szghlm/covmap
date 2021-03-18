@@ -159,7 +159,7 @@ def readData(filename):
     return lst
 ```
 
-(Aki ismeri pl. a Panda csomagot, bátran válasszon más megoldást a fentiek helyett.) 
+(Aki ismeri pl. a Pandas csomagot, bátran válasszon más megoldást a fentiek helyett.) 
 
 
 Most már tényleg jöhet a térkép előállítása. A webes térképek esetében az interaktivitás lehetőségét (zoomolás, navigálás, pontok kijelölése, stb.)
